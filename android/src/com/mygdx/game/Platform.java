@@ -10,7 +10,7 @@ public class Platform extends Entity{
 
     public Platform(String texturePath, MyMobileGame2 game, World world,  float x, float y) {
         super(texturePath, game,world, x, y);
-        sprite.setBounds(x, y, 9, 3);
+        sprite.setBounds(x, y, 9, 4);
         definePhysics();
     }
 
@@ -24,11 +24,11 @@ public class Platform extends Entity{
         BodyDef bodyDef = new BodyDef();
         bodyDef.fixedRotation = true;
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(this.getX() + this.sprite.getWidth() / 2, this.getY());
+        bodyDef.position.set(this.sprite.getX() + this.sprite.getWidth() / 2, this.getY() + 1);
         body = this.world.createBody(bodyDef);
 
         PolygonShape platformPhysics = new PolygonShape();
-        platformPhysics.setAsBox(this.sprite.getWidth() / 2, this.sprite.getHeight() / 4);
+        platformPhysics.setAsBox(this.sprite.getWidth() / 2 - 1, this.sprite.getHeight() / 4);
         FixtureDef fixtureDef = new FixtureDef();
 
         fixtureDef.shape = platformPhysics ;
@@ -44,11 +44,11 @@ public class Platform extends Entity{
     @Override
     public void dispose(){
         super.dispose();
-        world.destroyBody(this.body);
+        game.gameScreen.toDelete.add(this.body);
     }
 
     public void fallTop(PlayerClass player){
-        Vector2 newVelocity = new Vector2(player.body.getLinearVelocity().x, 50);
+        Vector2 newVelocity = new Vector2(player.body.getLinearVelocity().x, 38);
         player.body.setLinearVelocity(newVelocity);
     }
 

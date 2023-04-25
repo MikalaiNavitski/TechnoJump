@@ -14,28 +14,6 @@ public class GameContactListener implements ContactListener {
     }
     @Override
     public void beginContact(Contact contact) {
-        Fixture fa = contact.getFixtureA();
-        Fixture fb = contact.getFixtureB();
-        if(fa == null || fb == null){
-            return;
-        }
-
-        if(fa.getUserData() instanceof PlayerClass && fb.getUserData() instanceof Platform){
-            PlayerClass curPlayer = (PlayerClass) fa.getUserData();
-            Platform curPlatform = (Platform) fb.getUserData();
-            if(curPlayer.body.getLinearVelocity().y <= 0) {
-                curPlatform.fallTop(curPlayer);
-            }
-        }
-
-        if(fa.getUserData() instanceof Platform && fb.getUserData() instanceof PlayerClass){
-            PlayerClass curPlayer = (PlayerClass) fb.getUserData();
-            Platform curPlatform = (Platform) fa.getUserData();
-            if(curPlayer.body.getLinearVelocity().y <= 0) {
-                curPlatform.fallTop(curPlayer);
-            }
-        }
-
     }
 
     @Override
@@ -50,20 +28,43 @@ public class GameContactListener implements ContactListener {
         if(fa == null || fb == null){
             return;
         }
+        if(fa.getUserData() instanceof PlayerClass && fb.getUserData() instanceof  DamagedPlatform){
+            PlayerClass curPlayer = (PlayerClass) fa.getUserData();
+            DamagedPlatform curPlatform = (DamagedPlatform) fb.getUserData();
+            if(curPlatform.destroyed()){
+                contact.setEnabled(false);
+                return;
+            }
+        }
+        if(fb.getUserData() instanceof PlayerClass && fa.getUserData() instanceof  DamagedPlatform){
+            PlayerClass curPlayer = (PlayerClass) fb.getUserData();
+            DamagedPlatform curPlatform = (DamagedPlatform) fa.getUserData();
+            if(curPlatform.destroyed()){
+                contact.setEnabled(false);
+                return;
+            }
+        }
 
         if(fa.getUserData() instanceof PlayerClass && fb.getUserData() instanceof Platform){
             PlayerClass curPlayer = (PlayerClass) fa.getUserData();
             Platform curPlatform = (Platform) fb.getUserData();
-            if(curPlayer.positionY <= curPlatform.getY() + curPlatform.sprite.getHeight()){
+            if(curPlayer.body.getPosition().y < (curPlatform.fixture.getBody().getPosition().y + curPlatform.sprite.getHeight() / 2) || curPlayer.body.getLinearVelocity().y > 0){
                 contact.setEnabled(false);
+            }
+            else{
+                curPlatform.fallTop(curPlayer);
             }
         }
 
         if(fa.getUserData() instanceof Platform && fb.getUserData() instanceof PlayerClass){
             PlayerClass curPlayer = (PlayerClass) fb.getUserData();
             Platform curPlatform = (Platform) fa.getUserData();
-            if(curPlayer.positionY <= curPlatform.getY() + curPlatform.sprite.getHeight()){
+
+            if(curPlayer.body.getPosition().y < (curPlatform.fixture.getBody().getPosition().y + curPlatform.sprite.getHeight() / 2) || curPlayer.body.getLinearVelocity().y > 0){
                 contact.setEnabled(false);
+            }
+            else{
+                curPlatform.fallTop(curPlayer);
             }
         }
 

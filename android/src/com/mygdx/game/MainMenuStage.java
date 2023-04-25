@@ -1,6 +1,11 @@
 package com.mygdx.game;
 
+import static com.badlogic.gdx.Gdx.files;
+
+import android.util.Pair;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+
 public class MainMenuStage implements StageWrapper {
 
     private Stage stage;
@@ -30,7 +37,7 @@ public class MainMenuStage implements StageWrapper {
         this.game = game;
         stage = new Stage(game.viewport);
 
-        this.game.skin = new Skin(Gdx.files.internal("skin/comic-ui.json"));
+        this.game.skin = new Skin(files.internal("skin/comic-ui.json"));
 
         nameLabel = new Label("Techno Jump", game.skin, "title");
         nameLabel.setHeight(nameLabel.getHeight() * 2);
@@ -70,6 +77,14 @@ public class MainMenuStage implements StageWrapper {
         statistics.getLabel().setFontScale(2);
         statistics.setPosition(stage.getWidth()/ 2 - statistics.getWidth() / 2, playSinglePlayer.getY() - statistics.getHeight() - 100);
 
+        statistics.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.mainMenuScreen.currentStage = new StatisticsStage(game);
+                Gdx.input.setInputProcessor(game.mainMenuScreen.getStage());
+            }
+        });
+
         stage.addActor(backGround);
         stage.addActor(nameLabel);
         stage.addActor(playSinglePlayer);
@@ -98,6 +113,12 @@ public class MainMenuStage implements StageWrapper {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    @Override
+    public void render() {
+        stage.act();
+        stage.draw();
     }
 
 

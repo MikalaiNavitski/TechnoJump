@@ -10,4 +10,5 @@ public interface StageWrapper {
 
     void dispose();
 
+    void render();
 }

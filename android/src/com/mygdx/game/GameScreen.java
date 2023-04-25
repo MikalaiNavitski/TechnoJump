@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -18,6 +19,7 @@ public class GameScreen extends AbstractScreen{
     public SpriteBatch batch;
     private OrthographicCamera camera;
     public float lowerBound;
+    private float prevLowerBound;
     private int cameraWidth;
     private int cameraHeight;
     public static final int worldWidth = 40;
@@ -25,11 +27,12 @@ public class GameScreen extends AbstractScreen{
     public float ratio;
     private World worldPhysics;
 
-    public int score = 0;
+    public float score = 0;
 
     private WorldClass world;
     private PlayerClass player;
     private Box2DDebugRenderer debugRenderer;
+    public ArrayList<Body> toDelete;
 
     public GameScreen(MyMobileGame2 game) {
         super(game);
@@ -50,14 +53,25 @@ public class GameScreen extends AbstractScreen{
         batch = new SpriteBatch();
         world = new WorldClass(this.game, worldPhysics);
         player = new PlayerClass("imgonline-com-ua-Resize-bvGOQJ76rUhPN9UR.png", this.game, this.worldPhysics, GameScreen.worldWidth / 2f - 2f, 4);
+
+        toDelete = new ArrayList<>();
     }
 
 
     @Override
     public void render(float delta){
         super.render(delta);
+
+        for(Body curBody : toDelete){
+            this.worldPhysics.destroyBody(curBody);
+        }
+
+        toDelete.clear();
+
         player.move();
+        prevLowerBound = lowerBound;
         lowerBound = Math.max(lowerBound, (player.positionY - 20f * ratio));
+        score += lowerBound - prevLowerBound;
         camera.position.set(camera.viewportWidth / 2f,  lowerBound + ( 40f * ratio) / 2f, 0);
         camera.update();
         game.viewport.apply();
@@ -73,7 +87,7 @@ public class GameScreen extends AbstractScreen{
 
         Vector2 prevPositionPlayer = new Vector2(player.body.getPosition().x, player.body.getPosition().y);
 
-        worldPhysics.step(1/60f, 6, 2);
+        worldPhysics.step(1/60f, 6, 1);
 
         player.setPosition(player.getX() + (player.body.getPosition().x - prevPositionPlayer.x),  player.getY() + (player.body.getPosition().y - prevPositionPlayer.y));
         if(player.positionX + player.sprite.getWidth() < 0){
@@ -95,6 +109,10 @@ public class GameScreen extends AbstractScreen{
             player.body.setAwake(true);
         }
 
+        if(player.positionY < lowerBound){
+            game.setScreen(new DeathScreen(game, (int)score));
+        }
+
     }
 
     @Override
@@ -106,18 +124,25 @@ public class GameScreen extends AbstractScreen{
 
     public static float probabilityByDifficulty(int score){
         if(score < 1079){
-            return 0.1f;
-        }
-        else if (score < 2149){
             return 0.05f;
         }
-        else{
+        else if (score < 2149){
             return 0.025f;
+        }
+        else{
+            return 0.0125f;
         }
     }
 
     public World getWorld(){
         return this.worldPhysics;
+    }
+
+    public void dispose(){
+        player.dispose();
+        world.dispose();
+        worldPhysics.dispose();
+        batch.dispose();
     }
 
 }

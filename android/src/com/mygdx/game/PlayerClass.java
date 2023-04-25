@@ -50,7 +50,7 @@ public class PlayerClass extends Entity{
 
         fixtureDef.shape = platformPhysics ;
         fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.2f;
+        fixtureDef.friction = 0f;
         fixtureDef.restitution = 0f;
 
         fixture = this.body.createFixture(fixtureDef);
@@ -59,7 +59,10 @@ public class PlayerClass extends Entity{
     }
 
     public void move(){
-        float oXMovement = Gdx.input.getAccelerometerX() * -10;
+        float oXMovement = 5 * Gdx.input.getAccelerometerX() * Gdx.input.getAccelerometerX();
+        if(Gdx.input.getAccelerometerX() > 0){
+            oXMovement *= -1;
+        }
         float oYMovement = this.body.getLinearVelocity().y;
 
         stateTime += Gdx.graphics.getDeltaTime();

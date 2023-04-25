@@ -30,6 +30,8 @@ public class LoadingScreen extends AbstractScreen {
         this.game.assetManager.load("BACKGROUND0001.png", Texture.class);
         this.game.assetManager.load("PLATFORM.png", Texture.class);
         this.game.assetManager.load("imgonline-com-ua-Resize-bvGOQJ76rUhPN9UR.png", Texture.class);
+        this.game.assetManager.load("deathBlue.png", Texture.class);
+        this.game.assetManager.load("damaged.png", Texture.class);
     }
 
     @Override

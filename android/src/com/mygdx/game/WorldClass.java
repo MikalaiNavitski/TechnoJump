@@ -38,7 +38,11 @@ public class WorldClass {
         while(nxty < GameScreen.worldHeight - 3){
             float rand = new Random().nextInt(1001) / 1000f;
             if(rand < currentProbability){
-                platforms.add(new Platform("PLATFORM.png", this.game, this.world,  new Random().nextInt(GameScreen.worldWidth - 9), nxty));
+                float rand2  = new Random().nextInt(100);
+                if(rand2 < 20) {
+                    platforms.add(new DamagedPlatform("damaged.png", this.game, this.world,  new Random().nextInt(GameScreen.worldWidth - 9), nxty));
+                }
+                else  platforms.add(new Platform("PLATFORM.png", this.game, this.world,  new Random().nextInt(GameScreen.worldWidth - 9), nxty));
                 nxty += 3;
                 currentProbability = 0;
             }
@@ -62,12 +66,18 @@ public class WorldClass {
             cury += GameScreen.worldWidth * 3;
         }
 
-        float rate = GameScreen.probabilityByDifficulty(this.game.gameScreen.score);
+        float rate = GameScreen.probabilityByDifficulty((int)this.game.gameScreen.score);
         int lasty = 0;
 
         for(Platform curPlatf : previousWorld.platforms){
             if(curPlatf.getY() > GameScreen.worldHeight - 3 * GameScreen.worldWidth){
-                Platform newPlatform = new Platform("PLATFORM.png",  game, this.world,  curPlatf.getX(), curPlatf.getY() - GameScreen.worldHeight + 3f * GameScreen.worldWidth);
+                Platform newPlatform;
+                if(curPlatf instanceof DamagedPlatform){
+                    newPlatform = new DamagedPlatform("damaged.png",  game, this.world,  curPlatf.getX(), curPlatf.getY() - GameScreen.worldHeight + 3f * GameScreen.worldWidth);
+                }
+                else {
+                    newPlatform = new Platform("PLATFORM.png", game, this.world, curPlatf.getX(), curPlatf.getY() - GameScreen.worldHeight + 3f * GameScreen.worldWidth);
+                }
                 this.platforms.add(newPlatform);
                 lasty = Integer.max((int)newPlatform.getY(), lasty);
             }
@@ -79,7 +89,11 @@ public class WorldClass {
         while(lasty < GameScreen.worldHeight - 3){
             float rand = new Random().nextInt(1001) / 1000f;
             if(rand < currentProbability){
-                platforms.add(new Platform("PLATFORM.png", this.game, this.world, new Random().nextInt(GameScreen.worldWidth - 9), lasty));
+                float rand2  = new Random().nextInt(100);
+                if(rand2 < 20) {
+                    platforms.add(new DamagedPlatform("damaged.png", this.game, this.world,  new Random().nextInt(GameScreen.worldWidth - 9), lasty));
+                }
+                else  platforms.add(new Platform("PLATFORM.png", this.game, this.world, new Random().nextInt(GameScreen.worldWidth - 9), lasty));
                 lasty += 3;
                 currentProbability = 0;
             }
@@ -100,7 +114,12 @@ public class WorldClass {
         }
 
         for(Platform curPlatform : this.platforms){
-            if(curPlatform.getY() >= lower && curPlatform.getY() <= upper) {
+            if(curPlatform.getY() + curPlatform.sprite.getHeight() >= lower && curPlatform.getY() <= upper) {
+                if(curPlatform instanceof DamagedPlatform){
+                    if(((DamagedPlatform) curPlatform).destroyed()){
+                        continue;
+                    }
+                }
                 curPlatform.render(delta);
             }
         }

@@ -1,10 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -32,6 +29,9 @@ public class LoadingScreen extends AbstractScreen {
         this.game.assetManager.load("imgonline-com-ua-Resize-bvGOQJ76rUhPN9UR.png", Texture.class);
         this.game.assetManager.load("deathBlue.png", Texture.class);
         this.game.assetManager.load("damaged.png", Texture.class);
+        this.game.assetManager.load("merge_from_ofoct.png", Texture.class);
+        this.game.assetManager.load("Lava.png", Texture.class);
+        this.game.assetManager.load("DeathPink.png", Texture.class);
     }
 
     @Override

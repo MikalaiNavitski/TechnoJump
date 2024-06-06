@@ -19,10 +19,6 @@ public class MainMenuScreen extends AbstractScreen{
     public MainMenuScreen(MyMobileGame2 game) {
         super(game);
 
-        /*Preferences scoresPref = Gdx.app.getPreferences("scores");
-        scoresPref.clear();
-        scoresPref.flush();*/
-
 
         mainMenuStage = new MainMenuStage(game);
         currentStage = mainMenuStage;

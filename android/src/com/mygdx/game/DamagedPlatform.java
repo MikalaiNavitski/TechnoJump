@@ -14,7 +14,14 @@ public class DamagedPlatform extends Platform{
     public void fallTop(PlayerClass player){
         Vector2 newVelocity = new Vector2(player.body.getLinearVelocity().x, 38);
         player.body.setLinearVelocity(newVelocity);
+        if(game.gameScreen instanceof MultiplayerGameScreen){
+            ((MultiplayerGameScreen) game.gameScreen).connectionHandler.sendPlatformDeath(this.positionX, this.positionY);
+        }
         destroyed = true;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
     }
 
     public boolean destroyed(){

@@ -1,17 +1,13 @@
 buildscript {
-    
-
     repositories {
-        mavenLocal()
+        google()
         mavenCentral()
+        mavenLocal()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        
-
+        classpath 'com.android.tools.build:gradle:7.4.2'
     }
 }
 
@@ -19,6 +15,7 @@ allprojects {
     apply plugin: "eclipse"
 
     version = '1.0'
+
     ext {
         appName = "TechnoJump"
         gdxVersion = '1.11.0'
@@ -30,9 +27,9 @@ allprojects {
     }
 
     repositories {
-        mavenLocal()
-        mavenCentral()
         google()
+        mavenCentral()
+        mavenLocal()
         gradlePluginPortal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
@@ -46,7 +43,8 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        implementation project(":core")
+        implementation project(":core")// Ensure no syntax issues
+
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
@@ -65,15 +63,13 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-        
     }
 }
 
 project(":core") {
     apply plugin: "java-library"
 
-
-    dependencies {
+    dependencies {// Ensure no conflicts
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
@@ -81,6 +77,5 @@ project(":core") {
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         api "com.kotcrab.vis:vis-ui:1.4.11"
-        
     }
 }

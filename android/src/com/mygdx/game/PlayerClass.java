@@ -33,6 +33,7 @@ public class PlayerClass extends Entity{
     public void render(float delta) {
         //sprite.draw(game.gameScreen.batch);
         TextureRegion currentFrame = mainAnimation.getKeyFrame(stateTime, true);
+        System.out.println(this.game.gameScreen.batch);
         this.game.gameScreen.batch.draw(currentFrame, this.positionX - 2, this.positionY - 3f, 4, 6);
     }
 

@@ -30,6 +30,7 @@ public class MyMobileGame2 extends Game {
     public ScreenViewport viewport = new ScreenViewport();
     public com.badlogic.gdx.assets.AssetManager assetManager = new com.badlogic.gdx.assets.AssetManager();
     public MainMenuScreen mainMenuScreen;
+    public AndroidLauncher androidLauncher;
     public GameScreen gameScreen;
     public Skin skin;
 
@@ -39,5 +40,9 @@ public class MyMobileGame2 extends Game {
         setScreen(new LoadingScreen(this));
     }
 
+
+    public void setAndroidLauncher(AndroidLauncher androidLauncher){
+        this.androidLauncher = androidLauncher;
+    }
 
 }

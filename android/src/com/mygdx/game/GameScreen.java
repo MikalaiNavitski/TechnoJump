@@ -23,7 +23,7 @@ public class GameScreen extends AbstractScreen{
     private int cameraWidth;
     private int cameraHeight;
     public static final int worldWidth = 40;
-    public static final int worldHeight = 1200;
+    public static final int worldHeight = 800;
     public float ratio;
     private World worldPhysics;
 

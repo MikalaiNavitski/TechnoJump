@@ -74,6 +74,27 @@ public class PlayerClass extends Entity{
 
         body.setLinearVelocity(newVelocity);
     }
+
+    public void move(Boolean jump){
+        float oXMovement = 5 * Gdx.input.getAccelerometerX() * Gdx.input.getAccelerometerX();
+        if(Gdx.input.getAccelerometerX() > 0){
+            oXMovement *= -1;
+        }
+        float oYMovement = this.body.getLinearVelocity().y;
+
+        stateTime += Gdx.graphics.getDeltaTime();
+
+        oYMovement -= 0.5f;
+
+        if (jump) {
+           oYMovement += 500f;
+            ((MultiplayerGameScreen) game.gameScreen).jumpIs = Boolean.FALSE;
+        }
+
+        Vector2 newVelocity = new Vector2(oXMovement, oYMovement);
+
+        body.setLinearVelocity(newVelocity);
+    }
     @Override
     public void dispose(){
         world.destroyBody(this.body);

@@ -32,6 +32,8 @@ public class LoadingScreen extends AbstractScreen {
         this.game.assetManager.load("merge_from_ofoct.png", Texture.class);
         this.game.assetManager.load("Lava.png", Texture.class);
         this.game.assetManager.load("DeathPink.png", Texture.class);
+        this.game.assetManager.load("img.png", Texture.class);
+        this.game.assetManager.load("2946386-200 (1).png", Texture.class);
     }
 
     @Override

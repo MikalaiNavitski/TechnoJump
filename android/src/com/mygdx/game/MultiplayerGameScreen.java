@@ -1,13 +1,25 @@
 package com.mygdx.game;
 
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.multiplayer.ConnectionHandler;
 
 import java.util.ArrayList;
@@ -18,6 +30,7 @@ public class MultiplayerGameScreen extends GameScreen{
     private int cameraWidth;
     private int cameraHeight;
     private World worldPhysics;
+    private World emptyWorldPhysics;
     public long startTime;
     private long sendingTime = 0;
 
@@ -37,9 +50,21 @@ public class MultiplayerGameScreen extends GameScreen{
     private float opponentNextY = 0;
     private long frames = 0;
 
+    private boolean powerUpReady1 = false;
+    private boolean powerUpReady2 = false;
+    private int powerUpCount1 = 0;
+    private int powerUpCount2 = 0;
+
+    private ImageButton buttonUp;
+    private Sprite buttonUpUn;
+    public Boolean jumpIs = false;
+
+    private Stage stage;
 
     public MultiplayerGameScreen(MyMobileGame2 game, Integer generationKey, long startTime, boolean host, ConnectionHandler connectionHandler, String name, String opponentName) {
         super(game);
+        stage = new Stage(game.viewport);
+
         lowerBound = 0;
 
         this.connectionHandler = connectionHandler;
@@ -52,7 +77,7 @@ public class MultiplayerGameScreen extends GameScreen{
 
         worldPhysics = new World(new Vector2(0 ,0), true);
         worldPhysics.setContactListener(new GameContactListener(game));
-        World emptyWorldPhysics = new World(new Vector2(0, 0), true);
+        emptyWorldPhysics = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
 
         cameraWidth = Gdx.graphics.getWidth();
@@ -75,6 +100,28 @@ public class MultiplayerGameScreen extends GameScreen{
             opponent = new PlayerClass("imgonline-com-ua-Resize-bvGOQJ76rUhPN9UR.png", this.game, emptyWorldPhysics, GameScreen.worldWidth / 3f - 2f, 20);
             player = new PlayerClass("merge_from_ofoct.png", this.game, this.worldPhysics, GameScreen.worldWidth / 3f * 2 - 2f, 20);
         }
+
+        buttonUpUn = new Sprite(this.game.assetManager.get("img.png", Texture.class));
+        buttonUpUn.setSize(10, 10);
+        buttonUpUn.setPosition(10, 100);
+
+        buttonUp = new ImageButton(this.game.skin);
+        buttonUp.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(this.game.assetManager.get("2946386-200 (1).png", Texture.class)));
+        buttonUp.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(this.game.assetManager.get("2946386-200 (1).png", Texture.class)));
+
+        buttonUp.setPosition(10, 10);
+        buttonUp.setHeight(buttonUp.getHeight() * 2);
+        buttonUp.setWidth(buttonUp.getWidth() * 2);
+        buttonUp.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                powerUpReady1 = false;
+                jumpIs = true;
+            }
+        });
+
+        stage.addActor(buttonUp);
+
         toDelete = new ArrayList<>();
     }
 
@@ -88,14 +135,41 @@ public class MultiplayerGameScreen extends GameScreen{
 
         toDelete.clear();
 
-        player.move();
-        if(System.currentTimeMillis() - sendingTime > 500) {
+
+
+        player.move(jumpIs);
+        score = player.getY();
+        if(System.currentTimeMillis() - sendingTime > 100) {
             connectionHandler.sendPosition(player.positionX, player.positionY);
             moveOpponent();
             sendingTime = System.currentTimeMillis();
+            if(player.positionY < opponent.positionY){
+                if(powerUpReady1 == false) {
+                    powerUpCount1 += 1;
+                }
+                if(powerUpReady2 == false) {
+                    powerUpCount2 += 1;
+                }
+            }
         }
-        if(System.currentTimeMillis() - frames > 500 / 60){
-            opponent.setPosition(opponent.positionX + opponentNextPositionX, opponent.positionY + opponentNextPositionY);
+
+        if(powerUpCount1 == 100){
+            powerUpReady1 = true;
+            powerUpCount1 = 0;
+        }
+
+        if(powerUpCount2 == 100){
+            powerUpReady2 = true;
+            powerUpCount2 = 0;
+        }
+
+
+        if(frames != 0 && System.currentTimeMillis() - frames > (100 / 50)) {
+
+            while (System.currentTimeMillis() - frames > (100 / 50)){
+                opponent.setPosition(opponent.positionX + opponentNextPositionX, opponent.positionY + opponentNextPositionY);
+                frames += (100 / 50);
+            }
             frames = System.currentTimeMillis();
         }
         lowerBound = (float) ((System.currentTimeMillis() - startTime - 5000) * 10) /1000;
@@ -110,6 +184,15 @@ public class MultiplayerGameScreen extends GameScreen{
         world.render(delta, player.positionY - game.viewport.getScreenHeight(), player.positionY + game.viewport.getScreenHeight());
         player.render(delta);
         opponent.render(delta);
+        if (powerUpReady1){
+            Gdx.input.setInputProcessor(stage);
+            stage.act();
+            stage.draw();
+        }
+        else{
+            buttonUpUn.setPosition(0, player.positionY - (float) camera.viewportHeight / 2 + 5);
+            buttonUpUn.draw(batch);
+        }
         batch.end();
         debugRenderer.render(this.getWorld(), camera.combined);
 
@@ -174,8 +257,8 @@ public class MultiplayerGameScreen extends GameScreen{
         if(opponentNextX != 0){
             opponent.setPosition(opponentNextX, opponentNextY);
         }
-        opponentNextPositionX = (connectionHandler.opponentLastPositionX() - opponent.positionX) / 60;
-        opponentNextPositionY = (connectionHandler.opponentLastPositionY() - opponent.positionY) / 60;
+        opponentNextPositionX = (connectionHandler.opponentLastPositionX() - opponent.positionX) / 50;
+        opponentNextPositionY = (connectionHandler.opponentLastPositionY() - opponent.positionY) / 50;
         opponentNextX = connectionHandler.opponentLastPositionX();
         opponentNextY = connectionHandler.opponentLastPositionY();
 

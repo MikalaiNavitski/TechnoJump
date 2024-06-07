@@ -74,6 +74,7 @@ public class MultiplayerDeathStage implements StageWrapper{
                     ((MultiplayerGameScreen) game.gameScreen).connectionHandler.getBluetoothService().closeAllConnections();
                 }
                 System.out.println("!!!!!!!!!!!!!!!" + game.mainMenuScreen.getClass().toString());
+                game.databaseHelper.addBluetoothPlayerScore(name, nameOpponent, score, connectionHandler.opponentScore());
                 game.mainMenuScreen = new MainMenuScreen(game);
                 game.setScreen(game.mainMenuScreen);
                 Gdx.input.setInputProcessor(game.mainMenuScreen.getStage());
@@ -104,6 +105,13 @@ public class MultiplayerDeathStage implements StageWrapper{
         if(fallingChar.getY() < stage.getHeight() / 3 && !actThree){
             stage.addActor(backMenu);
             actThree = true;
+        }
+        if(actTwo){
+            if (connectionHandler.opponentDead()){
+                actualOpponentScore.setText(Integer.toString(Math.round(connectionHandler.opponentScore())));
+                stage.addActor(yourOpponentScore);
+                stage.addActor(actualOpponentScore);
+            }
         }
 
         stage.act();

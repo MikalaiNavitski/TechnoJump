@@ -2,28 +2,16 @@ package com.mygdx.game;
 
 import static com.badlogic.gdx.Gdx.files;
 
-import android.util.Pair;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Null;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.bluetooth.BluetoothService;
-import com.mygdx.game.bluetooth.BluetoothStage;
-
-import java.util.ArrayList;
 
 public class MainMenuStage implements StageWrapper {
 
@@ -33,7 +21,6 @@ public class MainMenuStage implements StageWrapper {
     private TextButton playSinglePlayer;
     private TextButton playMultiPlayerBluetootth;
     private TextButton statistics;
-    private TextButton settings;
     private Image backGround;
 
     public MainMenuStage(MyMobileGame2 game){

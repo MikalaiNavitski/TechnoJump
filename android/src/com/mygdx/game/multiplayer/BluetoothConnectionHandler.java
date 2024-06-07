@@ -69,11 +69,13 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
 
     @Override
     public boolean opponentDead() {
+        handleMessages();
         return opponentDead;
     }
 
     @Override
     public float opponentScore() {
+        handleMessages();
         return opponentScore;
     }
 

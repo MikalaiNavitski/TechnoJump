@@ -108,7 +108,8 @@ public class DeathStage implements StageWrapper{
         }
 
         if(name != null && !name.equals("") && !nameCheck){
-            int cur = 1;
+            game.databaseHelper.addSinglePlayerScore(name, score);
+/*            int cur = 1;
             boolean presented = false;
             boolean better = false;
             for(Pair<Integer, String> curScore : scores){
@@ -142,7 +143,7 @@ public class DeathStage implements StageWrapper{
                 keyInt.append(cur);
                 scoresPref.putInteger(keyInt.toString(), score);
                 scoresPref.flush();
-            }
+            }*/
             nameCheck = true;
         }
 

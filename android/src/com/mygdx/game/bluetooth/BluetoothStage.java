@@ -149,7 +149,10 @@ public class BluetoothStage implements StageWrapper {
     @Override
     public void render() {
         if (firstPlayerReady ){
-            if(myRandom == 0) {
+            game.gameScreen = new MultiplayerGameScreen(game, myRandom, System.currentTimeMillis(), true, new BluetoothConnectionHandler(bluetoothService), firstPlayerName, secondPlayerName);
+            game.setScreen(game.gameScreen);
+            Gdx.input.setInputProcessor(null);
+            /*if(myRandom == 0) {
                 myRandom = Math.abs(new Random().nextInt()) + 1;
             }
 
@@ -165,7 +168,7 @@ public class BluetoothStage implements StageWrapper {
                     game.setScreen(game.gameScreen);
                     Gdx.input.setInputProcessor(null);
                 }
-            }
+            }*/
 
         }
         if(System.currentTimeMillis() - delta > 1000) {

@@ -57,6 +57,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		initialize(game = new MyMobileGame2(), config);
 		game.setAndroidLauncher(this);
+		game.setDatabaseHelper(new DatabaseHelper(this));
 	}
 
 	@Override

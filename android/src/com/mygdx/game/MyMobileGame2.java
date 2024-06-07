@@ -32,6 +32,7 @@ public class MyMobileGame2 extends Game {
     public MainMenuScreen mainMenuScreen;
     public AndroidLauncher androidLauncher;
     public GameScreen gameScreen;
+    public DatabaseHelper databaseHelper;
     public Skin skin;
 
     @Override
@@ -43,6 +44,10 @@ public class MyMobileGame2 extends Game {
 
     public void setAndroidLauncher(AndroidLauncher androidLauncher){
         this.androidLauncher = androidLauncher;
+    }
+
+    public void setDatabaseHelper(DatabaseHelper databaseHelper){
+        this.databaseHelper = databaseHelper;
     }
 
 }

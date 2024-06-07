@@ -66,6 +66,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.insert(TABLE_NAME_SINGLE_PLAYER, null, values);
     }
 
+    public Cursor getLast20SinglePlayerScores() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME_SINGLE_PLAYER + " ORDER BY " + COLUMN_ID_SINGLE_PLAYER + " DESC LIMIT 20";
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getDistinctSinglePlayerScoresSortedByScore() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + COLUMN_NAME_SINGLE_PLAYER + ", " + " MAX(" + COLUMN_SCORE_SINGLE_PLAYER + ") AS max_score FROM " + TABLE_NAME_SINGLE_PLAYER + " GROUP BY " + COLUMN_NAME_SINGLE_PLAYER + " ORDER BY max_score" + " DESC LIMIT 20";
+        return db.rawQuery(query, null);
+    }
+
     public Cursor getAllSinglePlayerScores() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.query(TABLE_NAME_SINGLE_PLAYER, null, null, null, null, null, null);
@@ -112,5 +124,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int deleteBluetoothPlayerScore(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_NAME_BLUETOOTH_PLAYER, COLUMN_ID_BLUETOOTH + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    public Cursor getLast20BluetoothPlayerScores() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME_BLUETOOTH_PLAYER + " ORDER BY " + COLUMN_ID_BLUETOOTH + " DESC LIMIT 20";
+        return db.rawQuery(query, null);
     }
 }

@@ -14,7 +14,7 @@ public class MainMenuScreen extends AbstractScreen{
 
     public MainMenuStage mainMenuStage;
     public GameScreen gameScreen;
-    private StatisticsStage statisticsStage;
+    private SingleStatisticsStage statisticsStage;
     public StageWrapper currentStage;
     public MainMenuScreen(MyMobileGame2 game) {
         super(game);

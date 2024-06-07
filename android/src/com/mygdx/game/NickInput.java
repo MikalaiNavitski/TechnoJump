@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input;
 
 public class NickInput implements Input.TextInputListener {
 
-    private DeathStage whereToSave;
+    private final DeathStage whereToSave;
 
     public NickInput(DeathStage stage){
         whereToSave = stage;
@@ -12,7 +12,6 @@ public class NickInput implements Input.TextInputListener {
 
     @Override
     public void input (String text) {
-        //System.out.println(text);
         whereToSave.name = text;
     }
 

@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
-import android.util.Pair;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,32 +9,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.mygdx.game.multiplayer.ConnectionHandler;
-
-import java.util.ArrayList;
-
 public class MultiplayerDeathStage implements StageWrapper{
 
-    private Stage stage;
+    private final Stage stage;
 
-    private MyMobileGame2 game;
-
-    private Image fallingChar;
-    private Image backGround;
-    private TextButton backMenu;
-    private Label yourScore;
-    private Label yourOpponentScore;
-    private Label actualScore;
-    private Label actualOpponentScore;
+    private final Image fallingChar;
+    private final TextButton backMenu;
+    private final Label yourScore;
+    private final Label yourOpponentScore;
+    private final Label actualScore;
+    private final Label actualOpponentScore;
     private int tick = 0;
-    private int score;
     private boolean actTwo = false;
     private boolean actThree = false;
     public String name;
-    private ConnectionHandler connectionHandler;
+    private final ConnectionHandler connectionHandler;
 
     public MultiplayerDeathStage(MyMobileGame2 game, int score, boolean host, String name, String nameOpponent, ConnectionHandler connectionHandler){
-        this.game = game;
-        this.score = score;
         this.connectionHandler = connectionHandler;
 
         stage = new Stage(game.viewport);
@@ -48,7 +36,7 @@ public class MultiplayerDeathStage implements StageWrapper{
         fallingChar.setPosition((stage.getWidth() - fallingChar.getWidth()) / 2f, stage.getHeight() - fallingChar.getHeight());
         fallingChar.setOrigin(fallingChar.getWidth() / 2, fallingChar.getHeight() / 2);
 
-        backGround = new Image(game.assetManager.get("BACKGROUND0001.png", Texture.class));
+        Image backGround = new Image(game.assetManager.get("BACKGROUND0001.png", Texture.class));
         backGround.setPosition(0, 0);
         backGround.setWidth(stage.getWidth());
         backGround.setHeight(stage.getHeight());
@@ -73,8 +61,8 @@ public class MultiplayerDeathStage implements StageWrapper{
                 if(game.gameScreen instanceof MultiplayerGameScreen){
                     ((MultiplayerGameScreen) game.gameScreen).connectionHandler.getBluetoothService().closeAllConnections();
                 }
-                System.out.println("!!!!!!!!!!!!!!!" + game.mainMenuScreen.getClass().toString());
-                game.databaseHelper.addBluetoothPlayerScore(name, nameOpponent, score, connectionHandler.opponentScore());
+                System.out.println("!!!!!!!!!!!!!!!" + game.mainMenuScreen.getClass());
+                game.databaseHelper.addBluetoothPlayerScore(name, nameOpponent, score, Math.round(connectionHandler.opponentScore()));
                 game.mainMenuScreen = new MainMenuScreen(game);
                 game.setScreen(game.mainMenuScreen);
                 Gdx.input.setInputProcessor(game.mainMenuScreen.getStage());

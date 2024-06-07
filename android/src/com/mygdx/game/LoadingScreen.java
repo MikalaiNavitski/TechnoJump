@@ -15,8 +15,6 @@ public class LoadingScreen extends AbstractScreen {
     private Image loadingImage;
     private Image backgroundImage;
     private int tick = 0;
-    private float width = 400;
-    private float height = 800;
 
     public LoadingScreen(MyMobileGame2 game){
         super(game);
@@ -77,24 +75,14 @@ public class LoadingScreen extends AbstractScreen {
 
     @Override
     public void resize(int width, int height) {
-        this.width = stage.getWidth();
-        this.height = stage.getHeight();
+        float width1 = stage.getWidth();
+        float height1 = stage.getHeight();
 
         backgroundImage.setPosition(0, 0);
         backgroundImage.setHeight(stage.getHeight());
         backgroundImage.setWidth(stage.getWidth());
 
-        loadingImage.setPosition(this.width / 2 - loadingImage.getWidth() / 2, this.height / 2 - loadingImage.getHeight() / 2);
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
+        loadingImage.setPosition(width1 / 2 - loadingImage.getWidth() / 2, height1 / 2 - loadingImage.getHeight() / 2);
 
     }
 

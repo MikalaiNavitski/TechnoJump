@@ -17,18 +17,15 @@ import java.util.ArrayList;
 
 public class SingleStatisticsStage implements StageWrapper{
 
-    private Stage stage;
-    private MyMobileGame2 game;
+    private final Stage stage;
+    private final MyMobileGame2 game;
 
-    private Label mainLabel;
-    private Label historyLabel;
-    private Label bestScoreLabel;
-    private Image backGround;
-    private ScrollPane scoresList;
-    private ScrollPane scoresListBest;
+    private final Label mainLabel;
+    private final Label historyLabel;
+    private final Label bestScoreLabel;
+    private final Image backGround;
 
-    private ArrayList<Label> scores;
-    private ArrayList<Label> best;
+    private final ArrayList<Label> scores;
 
     @TargetApi(Build.VERSION_CODES.N)
     public SingleStatisticsStage(MyMobileGame2 game){
@@ -63,11 +60,11 @@ public class SingleStatisticsStage implements StageWrapper{
         while(result.moveToNext()) {
             StringBuilder string = new StringBuilder(result.getString(1));
             string.append(" : ");
-            string.append(Float.toString(result.getFloat(2)));
+            string.append(result.getFloat(2));
             Label curLabel = new Label(string.toString(), game.skin, "title");
             scores.add(curLabel);
             curLabel.setScale(0.5f);
-            System.out.println(string.toString());
+            System.out.println(string);
             //stage.addActor(curLabel);
         }
 
@@ -78,7 +75,7 @@ public class SingleStatisticsStage implements StageWrapper{
             scrollTable.row();
         }
 
-        scoresList = new ScrollPane(scrollTable);
+        ScrollPane scoresList = new ScrollPane(scrollTable);
 
         scoresList.setHeight(stage.getHeight() / 4);
         scoresList.setWidth(stage.getWidth() / 2);
@@ -94,16 +91,16 @@ public class SingleStatisticsStage implements StageWrapper{
 
         Cursor resultBest = game.databaseHelper.getDistinctSinglePlayerScoresSortedByScore();
 
-        best = new ArrayList<Label>();
+        ArrayList<Label> best = new ArrayList<>();
 
         while(resultBest.moveToNext()) {
             StringBuilder string = new StringBuilder(resultBest.getString(0));
             string.append(" : ");
-            string.append(Float.toString(resultBest.getFloat(1)));
+            string.append(resultBest.getFloat(1));
             Label curLabel = new Label(string.toString(), game.skin, "title");
             best.add(curLabel);
             curLabel.setScale(0.5f);
-            System.out.println(string.toString());
+            System.out.println(string);
             //stage.addActor(curLabel);
         }
 
@@ -114,7 +111,7 @@ public class SingleStatisticsStage implements StageWrapper{
             scrollTableBest.row();
         }
 
-        scoresListBest = new ScrollPane(scrollTableBest);
+        ScrollPane scoresListBest = new ScrollPane(scrollTableBest);
 
         scoresListBest.setHeight(stage.getHeight() / 4);
         scoresListBest.setWidth(stage.getWidth() / 2);

@@ -3,7 +3,6 @@ package com.mygdx.game;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -58,12 +57,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long addSinglePlayerScore(String name, float score) {
+    public void addSinglePlayerScore(String name, float score) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_SINGLE_PLAYER, name);
         values.put(COLUMN_SCORE_SINGLE_PLAYER, score);
-        return db.insert(TABLE_NAME_SINGLE_PLAYER, null, values);
+        db.insert(TABLE_NAME_SINGLE_PLAYER, null, values);
     }
 
     public Cursor getLast20SinglePlayerScores() {
@@ -96,14 +95,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_NAME_SINGLE_PLAYER, COLUMN_ID_SINGLE_PLAYER + " = ?", new String[]{String.valueOf(id)});
     }
 
-    public long addBluetoothPlayerScore(String nameFirst, String nameSecond, float scoreFirst, float scoreSecond) {
+    public void addBluetoothPlayerScore(String nameFirst, String nameSecond, float scoreFirst, float scoreSecond) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME_FIRST_BLUETOOTH, nameFirst);
         values.put(COLUMN_NAME_SECOND_BLUETOOTH, nameSecond);
         values.put(COLUMN_NAME_FIRST_SCORE, scoreFirst);
         values.put(COLUMN_NAME_SECOND_SCORE, scoreSecond);
-        return db.insert(TABLE_NAME_BLUETOOTH_PLAYER, null, values);
+        db.insert(TABLE_NAME_BLUETOOTH_PLAYER, null, values);
     }
 
     public Cursor getAllBluetoothPlayerScores() {

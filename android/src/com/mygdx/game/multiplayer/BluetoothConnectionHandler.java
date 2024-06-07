@@ -5,9 +5,7 @@ import android.util.Pair;
 import com.mygdx.game.bluetooth.BluetoothService;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class BluetoothConnectionHandler implements ConnectionHandler{
@@ -18,9 +16,9 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
 
     private float opponentScore = 0;
     private boolean opponentDead = false;
-    private Set<Pair<Float, Float> > deletedPlatform = new HashSet<>();
+    private final Set<Pair<Float, Float> > deletedPlatform = new HashSet<>();
 
-    private BluetoothService bluetoothService;
+    private final BluetoothService bluetoothService;
 
     public BluetoothConnectionHandler(BluetoothService bluetoothService){
         this.bluetoothService = bluetoothService;
@@ -28,7 +26,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
 
     @Override
     public void sendPosition(float x, float y) {
-        bluetoothService.sendMessageToAll("CURRENT STATE: " + x + ", " + y);
+        bluetoothService.sendMessage("CURRENT STATE: " + x + ", " + y);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
 
     @Override
     public void sendPlatformDeath(float x, float y) {
-        bluetoothService.sendMessageToAll("PLATFORM: " + x + ", " + y);
+        bluetoothService.sendMessage("PLATFORM: " + x + ", " + y);
     }
 
    @Override
@@ -64,7 +62,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
 
     @Override
     public void sendDeath(float score) {
-        bluetoothService.sendMessageToAll("DEATH: " + score);
+        bluetoothService.sendMessage("DEATH: " + score);
     }
 
     @Override
@@ -87,7 +85,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
                     String[] split = message.substring(15).split(", ");
                     opponentPositionX = Float.parseFloat(split[0]);
                     opponentPositionY = Float.parseFloat(split[1]);
-                } catch (Exception e){
+                } catch (Exception ignored){
 
                 }
             }
@@ -95,7 +93,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
                 try {
                     opponentScore = Float.parseFloat(message.substring(7));
                     opponentDead = true;
-                } catch (Exception e){
+                } catch (Exception ignored){
 
                 }
             }
@@ -105,7 +103,7 @@ public class BluetoothConnectionHandler implements ConnectionHandler{
                     float x = Float.parseFloat(split[0]);
                     float y = Float.parseFloat(split[1]);
                     deletedPlatform.add(new Pair<>(x, y));
-                } catch (Exception e){
+                } catch (Exception ignored){
 
                 }
             }

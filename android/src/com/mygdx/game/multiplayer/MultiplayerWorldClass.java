@@ -12,17 +12,17 @@ public class MultiplayerWorldClass {
 
     public ArrayList<Platform> platforms = new ArrayList<>();
     public ArrayList<Sprite> backgrounds = new ArrayList<>();
-    private MyMobileGame2 game;
-    private Sprite lava;
+    private final MyMobileGame2 game;
+    private final Sprite lava;
 
-    Integer generationKey = 0;
-    private int generatedY = 0;
-    public int etap = 0;
+    Integer generationKey;
+    private int generatedY;
+    public int etap;
 
-    private Random random;
+    private final Random random;
 
-    private World world;
-    private ConnectionHandler connectionHandler;
+    private final World world;
+    private final ConnectionHandler connectionHandler;
     public MultiplayerWorldClass(MyMobileGame2 game, World world, Integer generationKey, ConnectionHandler connectionHandler) {
         this.game = game;
         this.world = world;

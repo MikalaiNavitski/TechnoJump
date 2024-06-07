@@ -23,7 +23,6 @@ public class AndroidLauncher extends AndroidApplication {
 	private static final int REQUEST_ENABLE_BT = 1;
 	private static final int REQUEST_BLUETOOTH_PERMISSIONS = 2;
 
-	private BluetoothAdapter bluetoothAdapter;
 	private static final int REQUEST_DISCOVERABLE_BT = 1;
 	private BluetoothService bluetoothService;
 
@@ -37,7 +36,7 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useAccelerometer = true;
 		config.useCompass = false;
 
-		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 		if (bluetoothAdapter == null) {
 			return;
@@ -48,10 +47,7 @@ public class AndroidLauncher extends AndroidApplication {
 			startActivityForResult(enableBtIntent, REQUEST_DISCOVERABLE_BT);
 		}
 
-		// Start the server thread to listen for incoming connections
-		new Thread(() -> {
-			bluetoothService.acceptConnections();
-		}).start();
+		new Thread(() -> bluetoothService.acceptConnections()).start();
 
 		MyMobileGame2 game;
 
@@ -64,7 +60,6 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode >= REQUEST_ENABLE_BT) {
-			System.out.println("!!!!!!!!!!!" + resultCode);
 			if (resultCode >= 0) {
 				checkPermissionsAndConnect();
 			} else {
@@ -75,9 +70,7 @@ public class AndroidLauncher extends AndroidApplication {
 	}
 
 	private void checkPermissionsAndConnect() {
-		if (hasBluetoothPermissions()) {
-			return;
-		} else {
+		if (!hasBluetoothPermissions()){
 			requestBluetoothPermissions();
 		}
 	}
@@ -117,14 +110,12 @@ public class AndroidLauncher extends AndroidApplication {
 			if (grantResults.length == 0) {
 				return;
 			}
-			if (allPermissionsGranted(grantResults)) {
-			} else {
+			if (!allPermissionsGranted(grantResults)) {
 				Toast.makeText(this, "Bluetooth permissions are required to proceed.", Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		}
 	}
-
 	private boolean allPermissionsGranted(int[] grantResults) {
 		for (int result : grantResults) {
 			if (result != PackageManager.PERMISSION_GRANTED) {
@@ -138,8 +129,6 @@ public class AndroidLauncher extends AndroidApplication {
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
 		startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE_BT);
-		new Thread(() -> {
-			bluetoothService.acceptConnections();
-		}).start();
+		new Thread(() -> bluetoothService.acceptConnections()).start();
 	}
 }

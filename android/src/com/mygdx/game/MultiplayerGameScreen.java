@@ -10,40 +10,31 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.multiplayer.ConnectionHandler;
 
 import java.util.ArrayList;
 
 public class MultiplayerGameScreen extends GameScreen{
-    private OrthographicCamera camera;
-    private float prevLowerBound;
-    private int cameraWidth;
-    private int cameraHeight;
-    private World worldPhysics;
-    private World emptyWorldPhysics;
+    private final OrthographicCamera camera;
+    private final World worldPhysics;
     public long startTime;
-    private long sendingTime = 0;
+    private long sendingTime;
 
-    private com.mygdx.game.MultiplayerWorldClass world;
-    private PlayerClass player;
-    private PlayerClass opponent;
-    private Box2DDebugRenderer debugRenderer;
+    private final com.mygdx.game.MultiplayerWorldClass world;
+    private final PlayerClass player;
+    private final PlayerClass opponent;
 
     public ConnectionHandler connectionHandler;
 
-    private boolean host;
-    private String name;
-    private String opponentName;
+    private final boolean host;
+    private final String name;
+    private final String opponentName;
     private float opponentNextPositionX;
     private float opponentNextPositionY;
     private float opponentNextX = 0;
@@ -55,11 +46,10 @@ public class MultiplayerGameScreen extends GameScreen{
     private int powerUpCount1 = 0;
     private int powerUpCount2 = 0;
 
-    private ImageButton buttonUp;
-    private Sprite buttonUpUn;
+    private final Sprite buttonUpUn;
     public Boolean jumpIs = false;
 
-    private Stage stage;
+    private final Stage stage;
 
     public MultiplayerGameScreen(MyMobileGame2 game, Integer generationKey, long startTime, boolean host, ConnectionHandler connectionHandler, String name, String opponentName) {
         super(game);
@@ -77,11 +67,11 @@ public class MultiplayerGameScreen extends GameScreen{
 
         worldPhysics = new World(new Vector2(0 ,0), true);
         worldPhysics.setContactListener(new GameContactListener(game));
-        emptyWorldPhysics = new World(new Vector2(0, 0), true);
-        debugRenderer = new Box2DDebugRenderer();
+        World emptyWorldPhysics = new World(new Vector2(0, 0), true);
+        //debugRenderer = new Box2DDebugRenderer();
 
-        cameraWidth = Gdx.graphics.getWidth();
-        cameraHeight = Gdx.graphics.getHeight();
+        int cameraWidth = Gdx.graphics.getWidth();
+        int cameraHeight = Gdx.graphics.getHeight();
         ratio = 1f * cameraHeight / cameraWidth;
         camera = new OrthographicCamera(40f, 40f * ratio );
 
@@ -105,7 +95,7 @@ public class MultiplayerGameScreen extends GameScreen{
         buttonUpUn.setSize(10, 10);
         buttonUpUn.setPosition(10, 100);
 
-        buttonUp = new ImageButton(this.game.skin);
+        ImageButton buttonUp = new ImageButton(this.game.skin);
         buttonUp.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(this.game.assetManager.get("2946386-200 (1).png", Texture.class)));
         buttonUp.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(this.game.assetManager.get("2946386-200 (1).png", Texture.class)));
 
@@ -144,10 +134,10 @@ public class MultiplayerGameScreen extends GameScreen{
             moveOpponent();
             sendingTime = System.currentTimeMillis();
             if(player.positionY < opponent.positionY){
-                if(powerUpReady1 == false) {
+                if(!powerUpReady1) {
                     powerUpCount1 += 1;
                 }
-                if(powerUpReady2 == false) {
+                if(!powerUpReady2) {
                     powerUpCount2 += 1;
                 }
             }
@@ -194,7 +184,7 @@ public class MultiplayerGameScreen extends GameScreen{
             buttonUpUn.draw(batch);
         }
         batch.end();
-        debugRenderer.render(this.getWorld(), camera.combined);
+        //debugRenderer.render(this.getWorld(), camera.combined);
 
         Vector2 prevPositionPlayer = new Vector2(player.body.getPosition().x, player.body.getPosition().y);
 

@@ -1,37 +1,28 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.opengles.GL10;
-
 public class GameScreen extends AbstractScreen{
     public SpriteBatch batch;
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
     public float lowerBound;
-    private float prevLowerBound;
-    private int cameraWidth;
-    private int cameraHeight;
     public static final int worldWidth = 40;
     public static final int worldHeight = 800;
     public float ratio;
-    private World worldPhysics;
+    private final World worldPhysics;
 
     public float score = 0;
 
     private WorldClass world;
-    private PlayerClass player;
-    private Box2DDebugRenderer debugRenderer;
+    private final PlayerClass player;
     public ArrayList<Body> toDelete;
 
     public GameScreen(MyMobileGame2 game) {
@@ -40,10 +31,10 @@ public class GameScreen extends AbstractScreen{
 
         worldPhysics = new World(new Vector2(0 ,0), true);
         worldPhysics.setContactListener(new GameContactListener(game));
-        debugRenderer = new Box2DDebugRenderer();
+        //debugRenderer = new Box2DDebugRenderer();
 
-        cameraWidth = Gdx.graphics.getWidth();
-        cameraHeight = Gdx.graphics.getHeight();
+        int cameraWidth = Gdx.graphics.getWidth();
+        int cameraHeight = Gdx.graphics.getHeight();
         ratio = 1f * cameraHeight / cameraWidth;
         camera = new OrthographicCamera(40f, 40f * ratio );
 
@@ -69,7 +60,7 @@ public class GameScreen extends AbstractScreen{
         toDelete.clear();
 
         player.move();
-        prevLowerBound = lowerBound;
+        float prevLowerBound = lowerBound;
         lowerBound = Math.max(lowerBound, (player.positionY - 20f * ratio));
         score += lowerBound - prevLowerBound;
         camera.position.set(camera.viewportWidth / 2f,  lowerBound + ( 40f * ratio) / 2f, 0);
@@ -83,7 +74,7 @@ public class GameScreen extends AbstractScreen{
         world.render(delta, lowerBound, (lowerBound + 40f * ratio));
         player.render(delta);
         batch.end();
-        debugRenderer.render(this.getWorld(), camera.combined);
+        //debugRenderer.render(this.getWorld(), camera.combined);
 
         Vector2 prevPositionPlayer = new Vector2(player.body.getPosition().x, player.body.getPosition().y);
 

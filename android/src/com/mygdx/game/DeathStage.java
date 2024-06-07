@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
-import android.util.Pair;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,28 +9,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import java.util.ArrayList;
-
 public class DeathStage implements StageWrapper{
 
-    private Stage stage;
+    private final Stage stage;
 
-    private MyMobileGame2 game;
+    private final MyMobileGame2 game;
 
-    private Image fallingChar;
-    private Image backGround;
-    private TextButton backAgain;
-    private TextButton backMenu;
-    private Label yourScore;
-    private Label actualScore;
+    private final Image fallingChar;
+    private final TextButton backAgain;
+    private final TextButton backMenu;
+    private final Label yourScore;
+    private final Label actualScore;
     private int tick = 0;
-    private int score;
+    private final int score;
     private boolean actTwo = false;
     private boolean actThree = false;
     private boolean nameCheck = false;
     public String name;
-
-    private ArrayList<Pair<Integer, String>> scores;
 
     public DeathStage(MyMobileGame2 game, int score){
         this.game = game;
@@ -47,7 +39,7 @@ public class DeathStage implements StageWrapper{
         fallingChar.setPosition((stage.getWidth() - fallingChar.getWidth()) / 2f, stage.getHeight() - fallingChar.getHeight());
         fallingChar.setOrigin(fallingChar.getWidth() / 2, fallingChar.getHeight() / 2);
 
-        backGround = new Image(game.assetManager.get("BACKGROUND0001.png", Texture.class));
+        Image backGround = new Image(game.assetManager.get("BACKGROUND0001.png", Texture.class));
         backGround.setPosition(0, 0);
         backGround.setWidth(stage.getWidth());
         backGround.setHeight(stage.getHeight());
@@ -80,7 +72,7 @@ public class DeathStage implements StageWrapper{
             }
         });
 
-        scores = game.mainMenuScreen.getRecords();
+        game.mainMenuScreen.getRecords();
 
         stage.addActor(backGround);
         stage.addActor(fallingChar);
@@ -109,41 +101,6 @@ public class DeathStage implements StageWrapper{
 
         if(name != null && !name.equals("") && !nameCheck){
             game.databaseHelper.addSinglePlayerScore(name, score);
-/*            int cur = 1;
-            boolean presented = false;
-            boolean better = false;
-            for(Pair<Integer, String> curScore : scores){
-                if(name.equals(curScore.second)){
-                    presented = true;
-                    if(score > curScore.first){
-                        better = true;
-                    }
-                    break;
-                }
-                cur ++;
-            }
-            if(!presented) {
-                Preferences scoresPref = Gdx.app.getPreferences("scores");
-                int sizeContains = scoresPref.getInteger("size");
-                sizeContains++;
-                scoresPref.putInteger("size", sizeContains);
-
-                StringBuilder keyInt = new StringBuilder("int");
-                keyInt.append(sizeContains);
-                StringBuilder keyStr = new StringBuilder("str");
-                keyStr.append(sizeContains);
-
-                scoresPref.putInteger(keyInt.toString(), score);
-                scoresPref.putString(keyStr.toString(), name);
-                scoresPref.flush();
-            }
-            else if(presented && better){
-                Preferences scoresPref = Gdx.app.getPreferences("scores");
-                StringBuilder keyInt = new StringBuilder("int");
-                keyInt.append(cur);
-                scoresPref.putInteger(keyInt.toString(), score);
-                scoresPref.flush();
-            }*/
             nameCheck = true;
         }
 

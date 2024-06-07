@@ -9,12 +9,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import java.util.ArrayList;
-
 public class PlayerClass extends Entity{
 
     private float stateTime;
-    private Animation<TextureRegion> mainAnimation;
+    private final Animation<TextureRegion> mainAnimation;
     public PlayerClass(String texturePath, MyMobileGame2 game, World world, float x, float y){
         super(texturePath, game, world,  x, y);
         sprite.setBounds(x, y, 2, 3);
@@ -31,7 +29,6 @@ public class PlayerClass extends Entity{
     }
     @Override
     public void render(float delta) {
-        //sprite.draw(game.gameScreen.batch);
         TextureRegion currentFrame = mainAnimation.getKeyFrame(stateTime, true);
         System.out.println(this.game.gameScreen.batch);
         this.game.gameScreen.batch.draw(currentFrame, this.positionX - 2, this.positionY - 3f, 4, 6);
@@ -87,7 +84,7 @@ public class PlayerClass extends Entity{
         oYMovement -= 0.5f;
 
         if (jump) {
-           oYMovement += 500f;
+           oYMovement += 250f;
             ((MultiplayerGameScreen) game.gameScreen).jumpIs = Boolean.FALSE;
         }
 

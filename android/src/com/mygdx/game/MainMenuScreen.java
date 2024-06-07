@@ -14,7 +14,6 @@ public class MainMenuScreen extends AbstractScreen{
 
     public MainMenuStage mainMenuStage;
     public GameScreen gameScreen;
-    private SingleStatisticsStage statisticsStage;
     public StageWrapper currentStage;
     public MainMenuScreen(MyMobileGame2 game) {
         super(game);
@@ -40,16 +39,6 @@ public class MainMenuScreen extends AbstractScreen{
     }
 
     @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void dispose() {
         mainMenuStage.dispose();
     }
@@ -58,25 +47,21 @@ public class MainMenuScreen extends AbstractScreen{
         return this.currentStage.getStage();
     }
 
-    public ArrayList<Pair<Integer, String>> getRecords(){
+    public void getRecords(){
         ArrayList<Pair<Integer, String>> result = new ArrayList<>();
         Preferences scoresPref = Gdx.app.getPreferences("scores");
         if(scoresPref.contains("size")){
             int sizeContains = scoresPref.getInteger("size");
             int cur = 1;
             while(cur <= sizeContains){
-                StringBuilder keyInt = new StringBuilder("int");
-                keyInt.append(cur);
-                StringBuilder keyStr = new StringBuilder("str");
-                keyStr.append(cur);
-                String string = scoresPref.getString(keyStr.toString());
-                int number = scoresPref.getInteger(keyInt.toString());
+                String keyInt = "int" + cur;
+                String string = scoresPref.getString("str" + cur);
+                int number = scoresPref.getInteger(keyInt);
                 result.add(new Pair<>(number, string));
                 cur++;
             }
         }
         scoresPref.flush();
-        return result;
     }
 
 }

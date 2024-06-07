@@ -29,7 +29,7 @@ public class GameContactListener implements ContactListener {
             return;
         }
         if(fa.getUserData() instanceof PlayerClass && fb.getUserData() instanceof  DamagedPlatform){
-            PlayerClass curPlayer = (PlayerClass) fa.getUserData();
+            fa.getUserData();
             DamagedPlatform curPlatform = (DamagedPlatform) fb.getUserData();
             if(curPlatform.destroyed()){
                 contact.setEnabled(false);
@@ -37,7 +37,7 @@ public class GameContactListener implements ContactListener {
             }
         }
         if(fb.getUserData() instanceof PlayerClass && fa.getUserData() instanceof  DamagedPlatform){
-            PlayerClass curPlayer = (PlayerClass) fb.getUserData();
+            fb.getUserData();
             DamagedPlatform curPlatform = (DamagedPlatform) fa.getUserData();
             if(curPlatform.destroyed()){
                 contact.setEnabled(false);

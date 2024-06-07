@@ -11,9 +11,9 @@ public class WorldClass {
 
     public ArrayList<Platform> platforms = new ArrayList<>();
     public ArrayList<Sprite> backgrounds = new ArrayList<>();
-    private MyMobileGame2 game;
+    private final MyMobileGame2 game;
 
-    private World world;
+    private final World world;
     public WorldClass(MyMobileGame2 game, World world){
         this.game = game;
         this.world = world;

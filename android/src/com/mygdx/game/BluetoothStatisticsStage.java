@@ -17,15 +17,14 @@ import java.util.ArrayList;
 
 public class BluetoothStatisticsStage implements StageWrapper{
 
-    private Stage stage;
-    private MyMobileGame2 game;
+    private final Stage stage;
+    private final MyMobileGame2 game;
 
-    private Label mainLabel;
-    private Label historyLabel;
-    private Image backGround;
-    private ScrollPane scoresList;
+    private final Label mainLabel;
+    private final Label historyLabel;
+    private final Image backGround;
 
-    private ArrayList<Label> scores;
+    private final ArrayList<Label> scores;
 
     @TargetApi(Build.VERSION_CODES.N)
     public BluetoothStatisticsStage(MyMobileGame2 game){
@@ -56,14 +55,14 @@ public class BluetoothStatisticsStage implements StageWrapper{
         while(result.moveToNext()) {
             StringBuilder string = new StringBuilder(result.getString(1));
             string.append(" : ");
-            string.append(Float.toString(result.getFloat(3)));
+            string.append(result.getFloat(3));
             string.append("     ");
             string.append(result.getString(2));
             string.append(" : ");
-            string.append(Float.toString(result.getFloat(4)));
+            string.append(result.getFloat(4));
             Label curLabel = new Label(string.toString(), game.skin, "title");
             scores.add(curLabel);
-            System.out.println(string.toString());
+            System.out.println(string);
         }
 
         Table scrollTable = new Table(game.skin);
@@ -73,7 +72,7 @@ public class BluetoothStatisticsStage implements StageWrapper{
             scrollTable.row();
         }
 
-        scoresList = new ScrollPane(scrollTable);
+        ScrollPane scoresList = new ScrollPane(scrollTable);
 
         scoresList.setHeight(stage.getHeight() / 2);
         scoresList.setWidth((float) (stage.getWidth() * 0.8));

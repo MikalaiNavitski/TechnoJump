@@ -2,40 +2,32 @@ package com.mygdx.game.bluetooth;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Pair;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
-import com.mygdx.game.GameScreen;
 import com.mygdx.game.MultiplayerGameScreen;
 import com.mygdx.game.MyMobileGame2;
 import com.mygdx.game.StageWrapper;
 import com.mygdx.game.multiplayer.BluetoothConnectionHandler;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
 import java.util.Random;
 
 public class BluetoothStage implements StageWrapper {
 
-    private Stage stage;
-    private MyMobileGame2 game;
+    private final Stage stage;
+    private final MyMobileGame2 game;
 
-    private Label firstPlayerLabel;
-    private Label secondPlayerLabel;
-    private Image backGround;
+    private final Label firstPlayerLabel;
+    private final Label secondPlayerLabel;
+    private final Image backGround;
     String firstPlayerName = "None";
     String secondPlayerName = "None";
     boolean secondPlayerConnected = false;
@@ -43,15 +35,14 @@ public class BluetoothStage implements StageWrapper {
     boolean secondPlayerReady = false;
     private boolean startedInput = false;
 
-    private TextButton ready;
-    private NickInputBluetooth playerNickInput;
+    private final TextButton ready;
 
-    private BluetoothService bluetoothService;
+    private final BluetoothService bluetoothService;
 
     private int opponentRandom = 0;
     private int myRandom = 0;
 
-    private long delta = 0;
+    private long delta;
 
     @TargetApi(Build.VERSION_CODES.N)
     public BluetoothStage(MyMobileGame2 game){
@@ -59,7 +50,7 @@ public class BluetoothStage implements StageWrapper {
         stage = new Stage(game.viewport);
         delta = System.currentTimeMillis();
 
-        bluetoothService = BluetoothService.getInstance(); // Initialize the Bluetooth service
+        bluetoothService = BluetoothService.getInstance();
 
         Gdx.input.setCatchBackKey(true);
 
@@ -110,19 +101,19 @@ public class BluetoothStage implements StageWrapper {
 
     private void sendNameMessage(String name) {
         if(bluetoothService != null) {
-            bluetoothService.sendMessageToAll("PLAYER_NAME:" + name);
+            bluetoothService.sendMessage("PLAYER_NAME:" + name);
         }
     }
 
     private void sendReadyMessage(boolean ready) {
         if(bluetoothService != null) {
-            bluetoothService.sendMessageToAll("PLAYER_READY:" + (ready ? "true" : "false"));
+            bluetoothService.sendMessage("PLAYER_READY:" + (ready ? "true" : "false"));
         }
     }
 
     private void sendConnectedMessage(){
         if(bluetoothService != null) {
-            bluetoothService.sendMessageToAll("PLAYER_CONNECTED");
+            bluetoothService.sendMessage("PLAYER_CONNECTED");
         }
     }
 
@@ -148,27 +139,22 @@ public class BluetoothStage implements StageWrapper {
 
     @Override
     public void render() {
-        if (firstPlayerReady ){
-            game.gameScreen = new MultiplayerGameScreen(game, myRandom, System.currentTimeMillis(), true, new BluetoothConnectionHandler(bluetoothService), firstPlayerName, secondPlayerName);
-            game.setScreen(game.gameScreen);
-            Gdx.input.setInputProcessor(null);
-            /*if(myRandom == 0) {
+        if (firstPlayerReady && secondPlayerReady) {
+            if(myRandom == 0) {
                 myRandom = Math.abs(new Random().nextInt()) + 1;
             }
 
-            bluetoothService.sendMessageToAll("RANDOM: " + myRandom);
+            bluetoothService.sendMessage("RANDOM: " + myRandom);
             if(opponentRandom != 0){
                 if(opponentRandom > myRandom){
                     game.gameScreen = new MultiplayerGameScreen(game, myRandom, System.currentTimeMillis(), true, new BluetoothConnectionHandler(bluetoothService), firstPlayerName, secondPlayerName);
-                    game.setScreen(game.gameScreen);
-                    Gdx.input.setInputProcessor(null);
                 }
                 else{
                     game.gameScreen = new MultiplayerGameScreen(game, opponentRandom, System.currentTimeMillis(), false, new BluetoothConnectionHandler(bluetoothService), firstPlayerName, secondPlayerName);
-                    game.setScreen(game.gameScreen);
-                    Gdx.input.setInputProcessor(null);
                 }
-            }*/
+                game.setScreen(game.gameScreen);
+                Gdx.input.setInputProcessor(null);
+            }
 
         }
         if(System.currentTimeMillis() - delta > 1000) {
@@ -186,7 +172,7 @@ public class BluetoothStage implements StageWrapper {
         stage.act();
         if(!startedInput){
             startedInput = true;
-            playerNickInput = new NickInputBluetooth(this);
+            NickInputBluetooth playerNickInput = new NickInputBluetooth(this);
             Gdx.input.getTextInput(playerNickInput, "Your Name", "", "Put your nick here");
         }
         stage.draw();
@@ -215,12 +201,7 @@ public class BluetoothStage implements StageWrapper {
                 setSecondPlayerName(message.substring(12));
             }
             else if(message.contains("PLAYER_READY")){
-                if(message.substring(13).equals("true")){
-                    secondPlayerReady = true;
-                }
-                else{
-                    secondPlayerReady = false;
-                }
+                secondPlayerReady = message.substring(13).equals("true");
             }
             else if(message.contains("PLAYER_CONNECTED")){
                 secondPlayerConnected = true;
@@ -230,6 +211,4 @@ public class BluetoothStage implements StageWrapper {
             }
         }
     }
-
-    // Rest of the class...
 }

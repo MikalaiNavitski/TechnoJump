@@ -12,16 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.mygdx.game.bluetooth.BluetoothService;
 
 public class StatisticsStage implements StageWrapper {
 
-    private Stage stage;
-    private MyMobileGame2 game;
-    private Label nameLabel;
-    private TextButton soloStatistics;
-    private TextButton bluetoothStatistics;
-    private Image backGround;
+    private final Stage stage;
+    private final MyMobileGame2 game;
+    private final Label nameLabel;
+    private final TextButton soloStatistics;
+    private final TextButton bluetoothStatistics;
+    private final Image backGround;
 
     public StatisticsStage(MyMobileGame2 game){
         this.game = game;
